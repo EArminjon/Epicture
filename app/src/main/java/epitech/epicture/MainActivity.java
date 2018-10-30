@@ -13,11 +13,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
-    protected void onLogin(View view) {
+    public void onLogin(View view) {
         startActivity(new Intent(MainActivity.this, LoginActivity.class));
     }
 
-    protected void onSkipAuthentication(View view) {
+    public void onSkipAuthentication(View view) {
         startActivity(new Intent(MainActivity.this, GalleryActivity.class));
     }
 }
