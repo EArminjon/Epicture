@@ -17,10 +17,6 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(MainActivity.this, LoginActivity.class));
     }
 
-    protected void onRegister(View view) {
-        startActivity(new Intent(MainActivity.this, RegisterActivity.class));
-    }
-
     protected void onSkipAuthentication(View view) {
         startActivity(new Intent(MainActivity.this, GalleryActivity.class));
     }

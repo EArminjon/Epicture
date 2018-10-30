@@ -30,16 +30,9 @@
                     android:value="epitech.epicture.MainActivity"/>
         </activity>
         <activity
-                android:name=".RegisterActivity"
-                android:label="@string/title_activity_register"
-                android:parentActivityName=".MainActivity">
-            <meta-data
-                    android:name="android.support.PARENT_ACTIVITY"
-                    android:value="epitech.epicture.MainActivity"/>
-        </activity>
-        <activity
                 android:name=".GalleryActivity"
-                android:parentActivityName=".MainActivity">
+                android:label="@string/title_activity_gallery"
+                android:theme="@style/AppTheme.NoActionBar">
         </activity>
     </application>
 
