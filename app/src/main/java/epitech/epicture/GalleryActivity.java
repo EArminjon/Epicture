@@ -1,9 +1,12 @@
 package epitech.epicture;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -12,35 +15,108 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-public class GalleryActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class GalleryActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+    private Account account;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery);
+        Intent i = getIntent();
+        account = (Account) i.getSerializableExtra("account");
+
+
+        TabLayout tabLayout =
+                (TabLayout) findViewById(R.id.tab_layout);
+
+        tabLayout.addTab(tabLayout.newTab().setText("Camera"));
+        tabLayout.addTab(tabLayout.newTab().setText("Gallery"));
+        tabLayout.addTab(tabLayout.newTab().setText("Favorite"));
+
+        final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+        final PagerAdapter adapter = new TabPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
+        viewPager.setAdapter(adapter);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
+
+        createNavigationBar();
+        /* REPLACE VARIABLE */
+        updateNavigationAccount();
+    }
+
+    private void createNavigationBar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
-        });
+        });*/
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
     }
+
+    private void updateNavigationAccount() {
+        ImgurApi api = new ImgurApi();
+
+        api.getAccountSetting(this.getApplicationContext(), account, (String str) -> {
+            JSONObject json = null;
+            try {
+                json = new JSONObject(str);
+
+                TextView email = (TextView) findViewById(R.id.navigationAccountEmail);
+                TextView username = (TextView) findViewById(R.id.navigationAccountName);
+
+                email.setText(json.getJSONObject("data").get("email").toString());
+                username.setText(json.getJSONObject("data").get("account_url").toString());
+                if (json.getJSONObject("data").get("avatar") != null) {
+                    new ImageFromUrl((ImageView) findViewById(R.id.navigationAccountImage)).execute("https://imgur.com/user/" + account.getUsername() + "/avatar");
+                }
+
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            /*System.out.println("HERE: " + str);*/
+            return str;
+        });
+
+        /*TextView email = (TextView) findViewById(R.id.navigationAccountEmail);
+        TextView username = (TextView) findViewById(R.id.navigationAccountName);*/
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -82,6 +158,7 @@ public class GalleryActivity extends AppCompatActivity
 
         if (id == R.id.nav_camera) {
             // TODO launch camera
+            startActivity(new Intent(GalleryActivity.this, PictureActivity.class));
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {

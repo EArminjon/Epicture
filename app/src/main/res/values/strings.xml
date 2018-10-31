@@ -1,7 +1,8 @@
 <resources>
+    <string name="api_imgur_login">"https://api.imgur.com/oauth2/authorize?client_id=8e39b61670c5395&amp;response_type=token&amp;state=APPLICATION_STATE"</string>
     <string name="app_name">Epicture</string>
-    <string name="app_login">Login or Register</string>
-    <string name="app_register">Rgister</string>
+    <string name="app_logout">Logout</string>
+    <string name="app_login">Login</string>
     <string name="app_skip_authentication">Skip</string>
     <string name="title_activity_login">Login</string>
 
@@ -19,8 +20,13 @@
     <string name="title_activity_gallery">GalleryActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_title">Anonymous</string>
+    <string name="nav_header_subtitle">Not connected</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
