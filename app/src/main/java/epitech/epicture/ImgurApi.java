@@ -5,10 +5,11 @@ import com.android.volley.*;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ImgurApi {
+class ImgurApi {
 
     public interface Interface {
         String function(String str);
@@ -39,14 +40,25 @@ public class ImgurApi {
                 return map;
             }
         };
-
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
     }
 
+    void getGallery(Context context, Account account, Interface obj) {
+        String section = "hot", sort = "time", window = "month", page = "1", viral = "false", mature = "false";
+
+        String url = MessageFormat.format("https://api.imgur.com/3/gallery/{0}/{1}/{2}/{3}?showViral={4}&mature={5}",
+                section, sort, window, page, viral, mature);
+
+        Map<String, String> map = new HashMap<>();
+
+        map.put("Authorization", "Client-ID " + context.getString(R.string.api_client_id));
+        get(context, url, map, obj);
+    }
+
     void getAccountSetting(Context context, Account account, Interface obj) {
         String url = "https://api.imgur.com/3/account/me/settings";
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<>();
 
         map.put("Authorization", "Bearer " + account.getAccessToken());
         get(context, url, map, obj);

@@ -30,19 +30,25 @@ public class GalleryActivity extends AppCompatActivity implements NavigationView
         Intent i = getIntent();
         account = (Account) i.getSerializableExtra("account");
 
+        createPages();
+        createNavigationBar();
+        /* REPLACE VARIABLE */
+        updateNavigationAccount();
+    }
 
-        TabLayout tabLayout =
-                (TabLayout) findViewById(R.id.tab_layout);
+    private void createPages() {
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
 
-        tabLayout.addTab(tabLayout.newTab().setText("Camera"));
-        tabLayout.addTab(tabLayout.newTab().setText("Gallery"));
-        tabLayout.addTab(tabLayout.newTab().setText("Favorite"));
+        tabLayout.addTab(tabLayout.newTab().setText("Camera")); //0
+        tabLayout.addTab(tabLayout.newTab().setText("Gallery")); //1
+        tabLayout.addTab(tabLayout.newTab().setText("Favorite")); // 2
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-        final PagerAdapter adapter = new TabPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
+        final PagerAdapter adapter = new TabPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), account);
         viewPager.setAdapter(adapter);
+        viewPager.setCurrentItem(1);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
@@ -59,10 +65,6 @@ public class GalleryActivity extends AppCompatActivity implements NavigationView
             }
         });
 
-
-        createNavigationBar();
-        /* REPLACE VARIABLE */
-        updateNavigationAccount();
     }
 
     private void createNavigationBar() {

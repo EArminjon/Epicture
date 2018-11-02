@@ -1,4 +1,5 @@
 <resources>
+    <string name="api_client_id">"8e39b61670c5395"</string>
     <string name="api_imgur_login">"https://api.imgur.com/oauth2/authorize?client_id=8e39b61670c5395&amp;response_type=token&amp;state=APPLICATION_STATE"</string>
     <string name="app_name">Epicture</string>
     <string name="app_logout">Logout</string>
@@ -6,6 +7,8 @@
     <string name="app_skip_authentication">Skip</string>
     <string name="title_activity_login">Login</string>
 
+    <!-- GALLERY -->
+    <string name="picture_not_available">No picture Available</string>
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password (optional)</string>

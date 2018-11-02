@@ -1,16 +1,19 @@
 package epitech.epicture;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 public class TabPagerAdapter extends FragmentPagerAdapter {
 
-    int tabCount;
+    private int tabCount;
+    private Account account;
 
-    public TabPagerAdapter(FragmentManager fm, int numberOfTabs) {
+    TabPagerAdapter(FragmentManager fm, int numberOfTabs, Account account) {
         super(fm);
         this.tabCount = numberOfTabs;
+        this.account = account;
     }
 
     @Override
@@ -18,14 +21,15 @@ public class TabPagerAdapter extends FragmentPagerAdapter {
 
         switch (position) {
             case 0:
-                Tab1Fragment tab1 = new Tab1Fragment();
-                return tab1;
+                return new Tab1Fragment();
             case 1:
-                Tab2Fragment tab2 = new Tab2Fragment();
-                return tab2;
+                Bundle bundle = new Bundle();
+                Fragment frag = new Tab2Fragment();
+                bundle.putSerializable("account", account);
+                frag.setArguments(bundle);
+                return  frag;
             case 2:
-                Tab3Fragment tab3 = new Tab3Fragment();
-                return tab3;
+                return new Tab3Fragment();
             default:
                 return null;
         }

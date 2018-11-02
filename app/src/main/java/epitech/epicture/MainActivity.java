@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 
 public class MainActivity extends AppCompatActivity {
-    private static final int AUTHENTIFICATION = 0;
+    private static final int AUTHENTICATION = 0;
     private Account account = new Account();
 
     @Override
@@ -19,13 +19,13 @@ public class MainActivity extends AppCompatActivity {
     public void onLogin(View view) {
         Intent i = new Intent(this, AuthenticationActivity.class);
         i.putExtra("method", "login");
-        startActivityForResult(i, AUTHENTIFICATION);
+        startActivityForResult(i, AUTHENTICATION);
     }
 
     public void onLogout(View view) {
         Intent i = new Intent(this, AuthenticationActivity.class);
         i.putExtra("method", "logout");
-        startActivityForResult(i, AUTHENTIFICATION);
+        startActivityForResult(i, AUTHENTICATION);
     }
 
     public void onSkipAuthentication(View view) {
@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case AUTHENTIFICATION: {
+            case AUTHENTICATION: {
                 if (resultCode == Activity.RESULT_OK) {
                     account.setUsername(data.getStringExtra("username"));
                     account.setAccessToken(data.getStringExtra("accessToken"));
@@ -48,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
                     System.out.println(account.getAccessToken());
                     System.out.println(account.getRefreshToken());
                     onSkipAuthentication(null);
-                    // TODO Update your TextView.
                 }
                 break;
             }
