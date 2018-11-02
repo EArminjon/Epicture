@@ -6,11 +6,13 @@ public class GalleryItem implements Serializable {
     private String _id;
     private String _title;
     private String _name;
+    private GalleryImageItem[] _images = null;
 
-    GalleryItem(String id, String title, String name) {
+    GalleryItem(String id, String title, String name, GalleryImageItem[] images) {
         _id = id;
         _title = title;
         _name = name;
+        _images = images;
     }
 
     public String getId() {
@@ -35,5 +37,13 @@ public class GalleryItem implements Serializable {
 
     public void setName(String _name) {
         this._name = _name;
+    }
+
+    public GalleryImageItem[] getImages() {
+        return _images;
+    }
+
+    public void setImages(GalleryImageItem[] _images) {
+        this._images = _images;
     }
 }

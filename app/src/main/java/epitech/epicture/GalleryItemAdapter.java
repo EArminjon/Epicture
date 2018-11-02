@@ -59,7 +59,15 @@ public class GalleryItemAdapter extends BaseAdapter {
         final TextView ownerTextView = convertView.findViewById(R.id.textview_owner);
 
         // 4
-        Picasso.get().load("http://i.imgur.com/DvpvklR.png").resize(240, 240).into(imageView);
+        GalleryImageItem[] images = item.getImages();
+        if (images != null) {
+            String[] array = images[0].getType().split("/");
+            if (array[0].equals("image")) {
+                String url = images[0].getLink();
+                Picasso.get().load(url).resize(240, 240).into(imageView);
+            } else
+                Picasso.get().load("http://i.imgur.com/DvpvklR.png").resize(240, 240).into(imageView);
+        }
         datetextView.setText(item.getName());
         titleTextView.setText(item.getTitle());
         ownerTextView.setText(item.getName());

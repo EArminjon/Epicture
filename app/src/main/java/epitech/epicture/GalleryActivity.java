@@ -47,6 +47,7 @@ public class GalleryActivity extends AppCompatActivity implements NavigationView
         final PagerAdapter adapter = new TabPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), account);
         viewPager.setAdapter(adapter);
         viewPager.setCurrentItem(1);
+        tabLayout.setScrollPosition(1, 0f, true);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override

@@ -3,6 +3,7 @@ package epitech.epicture;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,21 +29,23 @@ public class Tab2Fragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        ImgurApi api = new ImgurApi();
         Bundle bundle = getArguments();
-        if (bundle == null) {
-            System.out.println("Tab2Frag ERRORRRRRRRRRRRRRRRRRRRRR");
+        if (bundle == null)
             return inflater.inflate(R.layout.fragment_tab2, container, false);
-        }
         Account account = (Account) bundle.getSerializable("account");
 
         View myFragmentView = inflater.inflate(R.layout.fragment_tab2, container, false);
+        loadGalleryContent(myFragmentView, account);
+        return myFragmentView;
+    }
+
+    private void loadGalleryContent(View myFragmentView, Account account) {
+        ImgurApi api = new ImgurApi();
 
         if (account != null)
             api.getGallery(this.getContext(), account, (String str) -> {
                 try {
                     JSONArray jsonarray = new JSONObject(str).getJSONArray("data");
-
                     GalleryItem[] items = new GalleryItem[jsonarray.length()];
 
                     for (int i = 0; i < jsonarray.length(); i++) {
@@ -50,7 +53,20 @@ public class Tab2Fragment extends Fragment {
                         String id = jsonobject.get("id").toString();
                         String title = jsonobject.get("title").toString();
                         String name = jsonobject.get("account_url").toString();
-                        GalleryItem item = new GalleryItem(id, title, name);
+                        GalleryImageItem[] images = null;
+                        if (jsonobject.has("images")) {
+                            JSONArray jsonImagesArray = jsonobject.getJSONArray("images");
+                            images = new GalleryImageItem[jsonImagesArray.length()];
+                            for (int j = 0; j < jsonImagesArray.length(); j++) {
+                                JSONObject jsonImageobject = jsonImagesArray.getJSONObject(j);
+                                String imageId = jsonImageobject.get("id").toString();
+                                String imageType = jsonImageobject.get("type").toString();
+                                String imageLink = jsonImageobject.get("link").toString();
+                                GalleryImageItem image = new GalleryImageItem(imageId, imageType, imageLink);
+                                images[j] = image;
+                            }
+                        }
+                        GalleryItem item = new GalleryItem(id, title, name, images);
                         items[i] = item;
                     }
 
@@ -69,8 +85,6 @@ public class Tab2Fragment extends Fragment {
                 return str;
             });
 
-
-        return myFragmentView;
     }
 
 }
