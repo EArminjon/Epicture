@@ -1,0 +1,17 @@
+PAGE ACCUEIL:
+    Un vrai login/logout qui marche, là y'a des truc qui reste en cache, impossible de se déco ou de changer de compte google...
+
+PAGE GALLERY:
+    Type video non pris en charge pour le moment
+    Page camera: Pouvoir prendre des images/videos puis les uploads
+    Page perso: Ajouter une pages pour voir les vidéos/images que j'ai upload
+    Page favorite: Affiche les images que l'user à mis en fav.
+
+    Navigation bar:
+    Logout / Changer de compte (si possible sans déco)
+    Setting: changer la page par défaut (Ez) ---------\
+                                                        System de cache dans l'apli :/ ?
+    Changer la position des pages (plus complex)------/
+    Langue (Ez)
+    Share : envoyer une photo par email / l'app à un amie (lien google store)
+    Report an issue (envoie email aux dev de l'app
