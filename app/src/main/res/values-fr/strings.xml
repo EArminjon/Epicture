@@ -1,0 +1,35 @@
+<resources>
+    <string name="api_client_id">"8e39b61670c5395"</string>
+    <string name="api_imgur_login">"https://api.imgur.com/oauth2/authorize?client_id=8e39b61670c5395&amp;response_type=token&amp;state=APPLICATION_STATE"</string>
+    <string name="app_name">Epicture</string>
+    <string name="app_logout">Se déconnecter</string>
+    <string name="app_login">Se connecter</string>
+    <string name="app_skip_authentication">Passer</string>
+    <string name="title_activity_login">Se connecter</string>
+
+    <!-- GALLERY -->
+    <string name="picture_not_available">Pas de photo</string>
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Mot de passe (optionnel)</string>
+    <string name="action_sign_in">"S'inscrire ou se connecter"</string>
+    <string name="action_sign_in_short">Se connecter</string>
+    <string name="error_invalid_email">Email invalide</string>
+    <string name="error_invalid_password">Mot de passe trop court</string>
+    <string name="error_incorrect_password">Mot de passe incorrect</string>
+    <string name="error_field_required">Champ requis</string>
+    <string name="permission_rationale">"Permission d'accéder aux contacts requise."</string>
+    <string name="title_activity_register">"S'inscrire"</string>
+    <string name="title_activity_gallery">Gallerie</string>
+    <string name="navigation_drawer_open">Ouvre le naviguateur</string>
+    <string name="navigation_drawer_close">Ferme le naviguateur</string>
+    <string name="nav_header_title">Espece de singe</string>
+    <string name="nav_header_subtitle">Non connecté</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Paramètres</string>
+    <string name="title_activity_main2">Activité du main 2</string>
+    <string name="section_format">Bonjour les dragons depuis la section: %1$d</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Enguezz boloss</string>
+</resources>
