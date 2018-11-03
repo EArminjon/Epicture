@@ -15,9 +15,10 @@ import org.json.JSONObject;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MyUploadFragment extends Fragment {
+public class FavoriteFragment extends Fragment {
 
-    public MyUploadFragment() {
+
+    public FavoriteFragment() {
         // Required empty public constructor
     }
 
@@ -28,10 +29,10 @@ public class MyUploadFragment extends Fragment {
         // Inflate the layout for this fragment
         Bundle bundle = getArguments();
         if (bundle == null)
-            return inflater.inflate(R.layout.my_upload_fragment, container, false);
+            return inflater.inflate(R.layout.favorite_fragment, container, false);
         Account account = (Account) bundle.getSerializable("account");
 
-        View myFragmentView = inflater.inflate(R.layout.my_upload_fragment, container, false);
+        View myFragmentView = inflater.inflate(R.layout.favorite_fragment, container, false);
         loadContent(myFragmentView, account);
         return myFragmentView;
     }
@@ -40,7 +41,7 @@ public class MyUploadFragment extends Fragment {
         ImgurApi api = new ImgurApi();
 
         if (account != null)
-            api.getAccountImages(this.getContext(), account, (String str) -> {
+            api.getAccountFavorite(this.getContext(), account, (String str) -> {
                 try {
                     JSONArray jsonarray = new JSONObject(str).getJSONArray("data");
                     GalleryItem[] items = new GalleryItem[jsonarray.length() > 14 ? 14 : jsonarray.length()];
@@ -48,7 +49,7 @@ public class MyUploadFragment extends Fragment {
                     for (int i = 0; i < jsonarray.length() && i < 14; i++) {
                         JSONObject jsonobject = jsonarray.getJSONObject(i);
                         String id = jsonobject.get("id").toString();
-                        String title = jsonobject.get("name").toString();
+                        String title = jsonobject.get("title").toString();
                         String name = jsonobject.get("account_url").toString();
                         String type = jsonobject.get("type").toString();
                         String link = jsonobject.get("link").toString();
@@ -57,7 +58,7 @@ public class MyUploadFragment extends Fragment {
                         items[i] = item;
                     }
 
-                    GridView gridView = (GridView) myFragmentView.findViewById(R.id.messageArea2);
+                    GridView gridView = (GridView) myFragmentView.findViewById(R.id.messageArea3);
                     final GalleryItemAdapter adapter = new GalleryItemAdapter(getActivity(), items);
                     gridView.setAdapter(adapter);
                     gridView.setOnItemClickListener((parent, view, position, id) -> {

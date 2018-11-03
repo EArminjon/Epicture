@@ -45,7 +45,7 @@ class ImgurApi {
     }
 
     void getGallery(Context context, Account account, Interface obj) {
-        String section = "hot", sort = "time", window = "month", page = "1", viral = "false", mature = "false";
+        String section = "hot", sort = "time", window = "month", page = "0", viral = "false", mature = "false";
 
         String url = MessageFormat.format("https://api.imgur.com/3/gallery/{0}/{1}/{2}/{3}?showViral={4}&mature={5}",
                 section, sort, window, page, viral, mature);
@@ -66,6 +66,16 @@ class ImgurApi {
 
     void getAccountImages(Context context, Account account, Interface obj) {
         String url = "https://api.imgur.com/3/account/me/images";
+        Map<String, String> map = new HashMap<>();
+
+        map.put("Authorization", "Bearer " + account.getAccessToken());
+        get(context, url, map, obj);
+    }
+
+    void getAccountFavorite(Context context, Account account, Interface obj) {
+        String page = "0";
+        String url = MessageFormat.format("https://api.imgur.com/3/account/{0}/favorites/{1}",
+                account.getUsername(), page);
         Map<String, String> map = new HashMap<>();
 
         map.put("Authorization", "Bearer " + account.getAccessToken());

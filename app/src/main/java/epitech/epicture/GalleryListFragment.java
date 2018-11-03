@@ -78,7 +78,6 @@ public class GalleryListFragment extends Fragment {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                /*System.out.println("HERE: " + str);*/
                 return str;
             });
 

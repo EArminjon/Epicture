@@ -21,21 +21,28 @@ public class TabPagerAdapter extends FragmentPagerAdapter {
 
         switch (position) {
             case 0:
-                return new Tab1Fragment();
-            case 1:
+                return new CameraFragment();
+            case 1: {
                 Bundle bundle = new Bundle();
                 Fragment frag = new GalleryListFragment();
                 bundle.putSerializable("account", account);
                 frag.setArguments(bundle);
                 return frag;
-            case 2:
-                Bundle bundle1 = new Bundle();
-                Fragment frag1 = new MyUploadFragment();
-                bundle1.putSerializable("account", account);
-                frag1.setArguments(bundle1);
-                return frag1;
-            case 3:
-                return new Tab3Fragment();
+            }
+            case 2: {
+                Bundle bundle = new Bundle();
+                Fragment frag = new MyUploadFragment();
+                bundle.putSerializable("account", account);
+                frag.setArguments(bundle);
+                return frag;
+            }
+            case 3: {
+                Bundle bundle = new Bundle();
+                Fragment frag = new FavoriteFragment();
+                bundle.putSerializable("account", account);
+                frag.setArguments(bundle);
+                return frag;
+            }
             default:
                 return null;
         }
