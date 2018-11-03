@@ -2,9 +2,13 @@ PAGE ACCUEIL:
     Un vrai login/logout qui marche, là y'a des truc qui reste en cache, impossible de se déco ou de changer de compte google...
 
 PAGE GALLERY:
+
+    GRIDVIEW: DERNIERE LIGNE BUG
+
     Type video non pris en charge pour le moment
     Page camera: Pouvoir prendre des images/videos puis les uploads
     Page perso: Ajouter une pages pour voir les vidéos/images que j'ai upload
+    Page upload: Affiche les images de l'user (manque les vidéo)
     Page favorite: Affiche les images que l'user à mis en fav.
 
     Navigation bar:
