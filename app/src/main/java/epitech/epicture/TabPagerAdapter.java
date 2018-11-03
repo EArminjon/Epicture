@@ -24,11 +24,17 @@ public class TabPagerAdapter extends FragmentPagerAdapter {
                 return new Tab1Fragment();
             case 1:
                 Bundle bundle = new Bundle();
-                Fragment frag = new Tab2Fragment();
+                Fragment frag = new GalleryListFragment();
                 bundle.putSerializable("account", account);
                 frag.setArguments(bundle);
-                return  frag;
+                return frag;
             case 2:
+                Bundle bundle1 = new Bundle();
+                Fragment frag1 = new MyUploadFragment();
+                bundle1.putSerializable("account", account);
+                frag1.setArguments(bundle1);
+                return frag1;
+            case 3:
                 return new Tab3Fragment();
             default:
                 return null;

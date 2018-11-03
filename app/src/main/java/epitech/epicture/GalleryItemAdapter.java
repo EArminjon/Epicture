@@ -46,6 +46,9 @@ public class GalleryItemAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         final GalleryItem item = _items[position];
+        if (item == null) {
+            System.out.print("y'a une erreur chelou");
+        }
         // 2
         if (convertView == null) {
             LayoutInflater layoutInflater = LayoutInflater.from(_mContext);
@@ -54,9 +57,8 @@ public class GalleryItemAdapter extends BaseAdapter {
 
         // 3
         final ImageView imageView = convertView.findViewById(R.id.imageview_cover_art);
-        final TextView datetextView = convertView.findViewById(R.id.textview_date);
         final TextView titleTextView = convertView.findViewById(R.id.textview_title);
-        final TextView ownerTextView = convertView.findViewById(R.id.textview_owner);
+        final TextView nameTextView = convertView.findViewById(R.id.textview_name);
 
         // 4
         GalleryImageItem[] images = item.getImages();
@@ -64,13 +66,20 @@ public class GalleryItemAdapter extends BaseAdapter {
             String[] array = images[0].getType().split("/");
             if (array[0].equals("image")) {
                 String url = images[0].getLink();
-                Picasso.get().load(url).resize(240, 240).into(imageView);
+                Picasso.get()
+                        .load(url)
+                        .resize(360, 240)
+                        .centerInside()
+                        .into(imageView);
             } else
-                Picasso.get().load("http://i.imgur.com/DvpvklR.png").resize(240, 240).into(imageView);
+                Picasso.get()
+                        .load("http://i.imgur.com/DvpvklR.png")
+                        .resize(360, 240)
+                        .centerInside()
+                        .into(imageView);
         }
-        datetextView.setText(item.getName());
         titleTextView.setText(item.getTitle());
-        ownerTextView.setText(item.getName());
+        nameTextView.setText(item.getName());
         return convertView;
     }
 

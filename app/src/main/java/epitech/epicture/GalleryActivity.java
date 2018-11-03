@@ -41,7 +41,8 @@ public class GalleryActivity extends AppCompatActivity implements NavigationView
 
         tabLayout.addTab(tabLayout.newTab().setText("Camera")); //0
         tabLayout.addTab(tabLayout.newTab().setText("Gallery")); //1
-        tabLayout.addTab(tabLayout.newTab().setText("Favorite")); // 2
+        tabLayout.addTab(tabLayout.newTab().setText("Upload")); // 2
+        tabLayout.addTab(tabLayout.newTab().setText("Favorite")); // 3
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
         final PagerAdapter adapter = new TabPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), account);

@@ -63,4 +63,12 @@ class ImgurApi {
         map.put("Authorization", "Bearer " + account.getAccessToken());
         get(context, url, map, obj);
     }
+
+    void getAccountImages(Context context, Account account, Interface obj) {
+        String url = "https://api.imgur.com/3/account/me/images";
+        Map<String, String> map = new HashMap<>();
+
+        map.put("Authorization", "Bearer " + account.getAccessToken());
+        get(context, url, map, obj);
+    }
 }
