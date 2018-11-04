@@ -48,7 +48,7 @@ public class MyUploadFragment extends Fragment {
                     for (int i = 0; i < jsonarray.length() && i < 14; i++) {
                         JSONObject jsonobject = jsonarray.getJSONObject(i);
                         String id = jsonobject.get("id").toString();
-                        String title = jsonobject.get("name").toString();
+                        String title = jsonobject.get("title").toString();
                         String name = jsonobject.get("account_url").toString();
                         String type = jsonobject.get("type").toString();
                         String link = jsonobject.get("link").toString();
@@ -71,5 +71,15 @@ public class MyUploadFragment extends Fragment {
                 return str;
             });
     }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        if (isVisibleToUser) {
+            //
+        }
+    }
+
 
 }

@@ -1,18 +1,14 @@
 package epitech.epicture;
 
-
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PixelFormat;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.*;
 import android.widget.Button;
-import android.widget.Toast;
 
 import java.io.IOException;
 
@@ -24,11 +20,12 @@ public class CameraFragment extends Fragment implements SurfaceHolder.Callback {
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
-    Camera camera;
-    SurfaceView surfaceView;
-    SurfaceHolder surfaceHolder;
-    boolean previewing = false;
+    private Camera camera;
+    private SurfaceView surfaceView;
+    private SurfaceHolder surfaceHolder;
+    private boolean previewing = false;
     LayoutInflater controlInflater = null;
+    Account account;
 
     public CameraFragment() {
         // Required empty public constructor
@@ -37,6 +34,12 @@ public class CameraFragment extends Fragment implements SurfaceHolder.Callback {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Bundle bundle = getArguments();
+        if (bundle == null)
+            return inflater.inflate(R.layout.fragment_tab1, container, false);
+        account = (Account) bundle.getSerializable("account");
+
+
         View myFragmentView = inflater.inflate(R.layout.fragment_tab1, container, false);
 
         ((Activity) getContext()).getWindow().setFormat(PixelFormat.UNKNOWN);
@@ -61,6 +64,7 @@ public class CameraFragment extends Fragment implements SurfaceHolder.Callback {
         public void onPictureTaken(byte[] imageData, Camera c) {
             Bitmap bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
             System.out.print("PICTURE TAKEN\n");
+            upload(account, bitmap);
             camera.startPreview();
         }
     };
@@ -133,12 +137,10 @@ public class CameraFragment extends Fragment implements SurfaceHolder.Callback {
         previewing = false;
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == android.app.Activity.RESULT_OK) {
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            /*mImageView.setImageBitmap(imageBitmap);*/
-        }
+    private void upload(Account account, Bitmap imageBitmap) {
+        ImgurApi api = new ImgurApi();
+
+        if (account != null)
+            new Thread(() -> api.postImageToAccount(getContext(), account, imageBitmap)).start();
     }
 }

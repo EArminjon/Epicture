@@ -20,8 +20,13 @@ public class TabPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
 
         switch (position) {
-            case 0:
-                return new CameraFragment();
+            case 0: {
+                Bundle bundle = new Bundle();
+                Fragment frag = new CameraFragment();
+                bundle.putSerializable("account", account);
+                frag.setArguments(bundle);
+                return frag;
+            }
             case 1: {
                 Bundle bundle = new Bundle();
                 Fragment frag = new GalleryListFragment();
