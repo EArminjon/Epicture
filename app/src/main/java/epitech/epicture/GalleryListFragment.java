@@ -1,15 +1,20 @@
 package epitech.epicture;
 
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
 
 /**
@@ -72,6 +77,11 @@ public class GalleryListFragment extends Fragment {
                     gridView.setAdapter(adapter);
                     gridView.setOnItemClickListener((parent, view, position, id) -> {
                         GalleryItem item = items[position];
+                        // pass item
+                        // Start activity
+                        Intent intent = new Intent((Activity) getContext(), GalleryItemActivity.class);
+                        intent.putExtra("item", item);
+                        startActivity(intent);
                         /*displayInfo(item);*/
                     });
 
