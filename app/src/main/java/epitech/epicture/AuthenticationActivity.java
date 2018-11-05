@@ -42,7 +42,6 @@ public class AuthenticationActivity extends AppCompatActivity {
     }
 
     private void login() {
-        System.out.println("LOGIN");
         WebView imgurWebView = (WebView) findViewById(R.id.webview);
         imgurWebView.setBackgroundColor(Color.TRANSPARENT);
         imgurWebView.loadUrl(getString(R.string.api_imgur_login));

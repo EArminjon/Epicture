@@ -17,10 +17,10 @@
             android:required="false"/>
 
     <application
-            android:largeHeap="true"
             android:allowBackup="true"
             android:icon="@mipmap/ic_launcher"
             android:label="@string/app_name"
+            android:largeHeap="true"
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
@@ -42,26 +42,25 @@
         <activity
                 android:name=".GalleryActivity"
                 android:label="@string/title_activity_gallery"
-                android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".PictureActivity"></activity>
-        <activity android:name=".AuthenticationActivity"></activity>
-        <activity
-                android:name=".GalleryItemActivity">
+                android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".PictureActivity"/>
+        <activity android:name=".AuthenticationActivity"/>
+        <activity android:name=".GalleryItemActivity">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value="epitech.epicture.GalleryActivity"/>
         </activity>
-        <activity
-                android:name=".MyUploadItemActivity">
+        <activity android:name=".MyUploadItemActivity">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value="epitech.epicture.GalleryItemActivity"/>
         </activity>
-        <activity
-                android:name=".FavoriteItemActivity">
+        <activity android:name=".FavoriteItemActivity">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value="epitech.epicture.GalleryItemActivity"/>
+        </activity>
+        <activity android:name=".UploadPictureActivity">
         </activity>
     </application>
 

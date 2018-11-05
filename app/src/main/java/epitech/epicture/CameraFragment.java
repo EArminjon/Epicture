@@ -1,14 +1,23 @@
 package epitech.epicture;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PixelFormat;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.InsetDrawable;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.*;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import java.io.IOException;
 
@@ -37,11 +46,11 @@ public class CameraFragment extends Fragment implements SurfaceHolder.Callback {
                              Bundle savedInstanceState) {
         Bundle bundle = getArguments();
         if (bundle == null)
-            return inflater.inflate(R.layout.fragment_tab1, container, false);
+            return inflater.inflate(R.layout.camera_fragment, container, false);
         account = (Account) bundle.getSerializable("account");
 
 
-        View myFragmentView = inflater.inflate(R.layout.fragment_tab1, container, false);
+        View myFragmentView = inflater.inflate(R.layout.camera_fragment, container, false);
 
         ((Activity) getContext()).getWindow().setFormat(PixelFormat.UNKNOWN);
         surfaceView = (SurfaceView) myFragmentView.findViewById(R.id.surfaceView2);
@@ -81,10 +90,37 @@ public class CameraFragment extends Fragment implements SurfaceHolder.Callback {
         public void onPictureTaken(byte[] imageData, Camera c) {
             Bitmap bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
             System.out.print("PICTURE TAKEN\n");
-            upload(account, bitmap);
+            checkPictureWithPopUp(bitmap);
+            /*upload(account, bitmap);*/
             camera.startPreview();
         }
     };
+
+    private void checkPictureWithPopUp(Bitmap image) {
+        AlertDialog.Builder pictureDialog = new AlertDialog.Builder(getContext());
+        String[] pictureDialogItems = {"ANNULER", "VALIDER"};
+
+        ImageView imageView = new ImageView(getActivity());
+        float scaleHt = 600.0f / image.getWidth();
+        Bitmap scaled = Bitmap.createScaledBitmap(image, 600, (int) (image.getWidth() * scaleHt), true);
+        imageView.setImageBitmap(scaled);
+
+        pictureDialog.setView(imageView);
+        pictureDialog.setItems(pictureDialogItems,
+                (dialog, which) -> {
+                    switch (which) {
+                        case 0:
+                            break;
+                        case 1:
+                            Intent intent = new Intent(getContext(), UploadPictureActivity.class);
+                            intent.putExtra("account", account);
+                            intent.putExtra("image", image); // trop large pour passer ... PUTAIN DE MERDE
+                            getContext().startActivity(intent);
+                            break;
+                    }
+                });
+        pictureDialog.show();
+    }
 
 
     @Override
@@ -161,12 +197,5 @@ public class CameraFragment extends Fragment implements SurfaceHolder.Callback {
     public void surfaceDestroyed(SurfaceHolder holder) {
         // TODO Auto-generated method stub
         destroyCamera();
-    }
-
-    private void upload(Account account, Bitmap imageBitmap) {
-        ImgurApi api = new ImgurApi();
-
-        if (account != null)
-            new Thread(() -> api.postImageToAccount(getContext(), account, imageBitmap)).start();
     }
 }
