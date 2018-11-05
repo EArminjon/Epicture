@@ -41,7 +41,7 @@ public class FavoriteFragment extends Fragment {
         ImgurApi api = new ImgurApi();
 
         if (account != null)
-            api.getAccountFavorite(this.getContext(), account, (String str) -> {
+            new Thread(() -> api.getAccountFavorite(getContext(), account, (String str) -> {
                 try {
                     JSONArray jsonarray = new JSONObject(str).getJSONArray("data");
                     GalleryItem[] items = new GalleryItem[jsonarray.length() > 14 ? 14 : jsonarray.length()];
@@ -70,7 +70,6 @@ public class FavoriteFragment extends Fragment {
                     e.printStackTrace();
                 }
                 return str;
-            });
+            })).start();
     }
-
 }

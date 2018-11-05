@@ -8,7 +8,6 @@ import android.hardware.Camera;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.*;
-import android.widget.Button;
 import android.widget.ImageButton;
 
 import java.io.IOException;
@@ -61,13 +60,20 @@ public class CameraFragment extends Fragment implements SurfaceHolder.Callback {
         switchButton.setOnClickListener(v -> camera.takePicture(null, null, mPictureCallback));
 
         ImageButton takeButton = (ImageButton) myFragmentView.findViewById(R.id.buttonSwitchCamera);
-        takeButton.setOnClickListener(v -> {
+        takeButton.setOnClickListener(v -> new Thread(() -> {
             destroyCamera();
             if (cameraMod == Camera.CameraInfo.CAMERA_FACING_FRONT)
                 openCamera(Camera.CameraInfo.CAMERA_FACING_BACK);
             else
                 openCamera(Camera.CameraInfo.CAMERA_FACING_FRONT);
-        });
+            try {
+                camera.setPreviewDisplay(surfaceHolder);
+                setCameraDisplayOrientation((Activity) getContext(), cameraMod, camera);
+                camera.startPreview();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start());
         return myFragmentView;
     }
 
@@ -93,7 +99,7 @@ public class CameraFragment extends Fragment implements SurfaceHolder.Callback {
         if (camera != null) {
             try {
                 camera.setPreviewDisplay(surfaceHolder);
-                setCameraDisplayOrientation((Activity) this.getContext(), camera);
+                setCameraDisplayOrientation((Activity) this.getContext(), cameraMod, camera);
                 camera.startPreview();
                 previewing = true;
             } catch (IOException e) {
@@ -103,9 +109,9 @@ public class CameraFragment extends Fragment implements SurfaceHolder.Callback {
         }
     }
 
-    private static void setCameraDisplayOrientation(Activity activity, android.hardware.Camera camera) {
+    private static void setCameraDisplayOrientation(Activity activity, int cameraMod, android.hardware.Camera camera) {
         android.hardware.Camera.CameraInfo info = new android.hardware.Camera.CameraInfo();
-        android.hardware.Camera.getCameraInfo(0, info);
+        android.hardware.Camera.getCameraInfo(cameraMod, info);
         int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
         int degrees = 0;
         switch (rotation) {

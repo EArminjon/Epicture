@@ -9,6 +9,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
@@ -103,7 +104,6 @@ class ImgurApi {
     }
 
     void postImageToAccount(Context context, Account account, Bitmap image) {
-        System.out.print("ON UPLOAD LET IS GO !\n");
         String url = "https://api.imgur.com/3/image";
         Map<String, String> map = new HashMap<>();
         String encoded = get64BaseImage(image);
@@ -118,5 +118,21 @@ class ImgurApi {
         }
         map.put("Authorization", "Bearer " + account.getAccessToken());
         send(context, Request.Method.POST, url, map, json.toString(), null);
+    }
+
+    void postImageToFavorite(Context context, Account account, GalleryImageItem image, Interface obj) {
+        String url = MessageFormat.format("https://api.imgur.com/3/image/{0}/favorite",
+                image.getId());
+        Map<String, String> map = new HashMap<>();
+        map.put("Authorization", "Bearer " + account.getAccessToken());
+        send(context, Request.Method.POST, url, map, null, obj);
+    }
+
+    void delImageFromAccount(Context context, Account account, GalleryImageItem image, Interface obj) {
+        String url = MessageFormat.format("https://api.imgur.com/3/image/{0}",
+                image.getId());
+        Map<String, String> map = new HashMap<>();
+        map.put("Authorization", "Bearer " + account.getAccessToken());
+        send(context, Request.Method.POST, url, map, null, obj);
     }
 }
