@@ -45,7 +45,12 @@
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".PictureActivity"></activity>
         <activity android:name=".AuthenticationActivity"></activity>
-        <activity android:name=".GalleryItemActivity"></activity>
+        <activity
+            android:name=".GalleryItemActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="epitech.epicture.GalleryActivity" />
+        </activity>
     </application>
 
 </manifest>
