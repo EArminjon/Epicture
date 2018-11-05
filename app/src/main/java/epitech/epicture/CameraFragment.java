@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.*;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import java.io.IOException;
 
@@ -21,6 +22,7 @@ public class CameraFragment extends Fragment implements SurfaceHolder.Callback {
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
     private Camera camera;
+    private int cameraMod;
     private SurfaceView surfaceView;
     private SurfaceHolder surfaceHolder;
     private boolean previewing = false;
@@ -55,8 +57,17 @@ public class CameraFragment extends Fragment implements SurfaceHolder.Callback {
                 LayoutParams.FILL_PARENT);
         this.addContentView(viewControl, layoutParamsControl);*/
 
-        Button button = (Button) myFragmentView.findViewById(R.id.buttonTakePicture);
-        button.setOnClickListener(v -> camera.takePicture(null, null, mPictureCallback));
+        ImageButton switchButton = (ImageButton) myFragmentView.findViewById(R.id.buttonTakePicture);
+        switchButton.setOnClickListener(v -> camera.takePicture(null, null, mPictureCallback));
+
+        ImageButton takeButton = (ImageButton) myFragmentView.findViewById(R.id.buttonSwitchCamera);
+        takeButton.setOnClickListener(v -> {
+            destroyCamera();
+            if (cameraMod == Camera.CameraInfo.CAMERA_FACING_FRONT)
+                openCamera(Camera.CameraInfo.CAMERA_FACING_BACK);
+            else
+                openCamera(Camera.CameraInfo.CAMERA_FACING_FRONT);
+        });
         return myFragmentView;
     }
 
@@ -122,19 +133,28 @@ public class CameraFragment extends Fragment implements SurfaceHolder.Callback {
         camera.setDisplayOrientation(result);
     }
 
+    private void openCamera(int mod) {
+        cameraMod = mod;
+        camera = Camera.open(mod);
+    }
+
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         // TODO Auto-generated method stub
-        camera = Camera.open();
+        openCamera(Camera.CameraInfo.CAMERA_FACING_BACK);
+    }
+
+    private void destroyCamera() {
+        camera.stopPreview();
+        camera.release();
+        camera = null;
+        previewing = false;
     }
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         // TODO Auto-generated method stub
-        camera.stopPreview();
-        camera.release();
-        camera = null;
-        previewing = false;
+        destroyCamera();
     }
 
     private void upload(Account account, Bitmap imageBitmap) {
