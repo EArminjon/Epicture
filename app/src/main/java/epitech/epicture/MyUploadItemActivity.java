@@ -1,29 +1,21 @@
 package epitech.epicture;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.GridView;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.squareup.picasso.Picasso;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-public class GalleryItemActivity extends AppCompatActivity {
+public class MyUploadItemActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_gallery_item);
+        setContentView(R.layout.activity_upload_item);
 
         GalleryItem item = (GalleryItem) getIntent().getSerializableExtra("item");
         Account account = (Account) getIntent().getSerializableExtra("account");
-        ImageView image = (ImageView) findViewById(R.id.galleryItemView);
+        ImageView image = (ImageView) findViewById(R.id.uploadItemView);
 
         String[] array = item.getImages()[0].getType().split("/");
         if (array[0].equals("image")) {
@@ -41,13 +33,12 @@ public class GalleryItemActivity extends AppCompatActivity {
                     .into(image);
 
         String title = item.getTitle();
-        TextView textView = (TextView) findViewById(R.id.galleryItemTitle);
+        TextView textView = (TextView) findViewById(R.id.uploadItemTitle);
         textView.setText(title);
 
-        ImageButton favoriteButton = (ImageButton) findViewById(R.id.FavoriteButtonGalleryItem);
+        ImageButton favoriteButton = (ImageButton) findViewById(R.id.FavoriteButtonUploadItem);
         favoriteButton.setOnClickListener(v -> {
             ImgurApi api = new ImgurApi();
-
             if (account != null)
                 new Thread(() -> api.postImageToFavorite(getApplicationContext(), account, item.getImages()[0], (String str) -> {
                     System.out.print("FAV:" + str + "\n");
@@ -55,9 +46,20 @@ public class GalleryItemActivity extends AppCompatActivity {
                 })).start();
         });
 
-        ImageButton downloadButton = (ImageButton) findViewById(R.id.DownloadButtonGalleryItem);
+        ImageButton downloadButton = (ImageButton) findViewById(R.id.DownloadButtonUploadItem);
         downloadButton.setOnClickListener(v -> {
             //TODO
+        });
+
+        ImageButton deleteButton = (ImageButton) findViewById(R.id.TrashButtonUploadItem);
+        deleteButton.setOnClickListener(v -> {
+            ImgurApi api = new ImgurApi();
+            if (account != null)
+                new Thread(() -> api.delImageFromAccount(getApplicationContext(), account, item.getImages()[0], (String str) -> {
+                    System.out.print("FAV:" + str + "\n");
+                    finish();
+                    return str;
+                })).start();
         });
 
     }

@@ -77,12 +77,10 @@ public class GalleryListFragment extends Fragment {
                     gridView.setAdapter(adapter);
                     gridView.setOnItemClickListener((parent, view, position, id) -> {
                         GalleryItem item = items[position];
-                        // pass item
-                        // Start activity
                         Intent intent = new Intent((Activity) getContext(), GalleryItemActivity.class);
                         intent.putExtra("item", item);
+                        intent.putExtra("account", account);
                         startActivity(intent);
-                        /*displayInfo(item);*/
                     });
 
                 } catch (JSONException e) {

@@ -133,6 +133,6 @@ class ImgurApi {
                 image.getId());
         Map<String, String> map = new HashMap<>();
         map.put("Authorization", "Bearer " + account.getAccessToken());
-        send(context, Request.Method.POST, url, map, null, obj);
+        send(context, Request.Method.DELETE, url, map, null, obj);
     }
 }

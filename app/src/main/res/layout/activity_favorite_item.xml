@@ -7,7 +7,7 @@
     tools:context=".GalleryItemActivity">
 
     <ImageView
-        android:id="@+id/galleryItemView"
+        android:id="@+id/favoriteItemView"
         android:layout_width="360dp"
         android:layout_height="360dp"
         android:layout_marginStart="16dp"
@@ -19,7 +19,7 @@
         android:contentDescription="Image" />
 
     <TextView
-        android:id="@+id/galleryItemTitle"
+        android:id="@+id/favoriteItemTitle"
         android:layout_width="0dp"
         android:layout_height="31dp"
         android:layout_marginStart="8dp"
@@ -31,35 +31,49 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.466"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/galleryItemView" />
+        app:layout_constraintTop_toBottomOf="@+id/favoriteItemView" />
 
     <ImageButton
             android:scaleType="fitCenter"
-            android:id="@+id/DownloadButtonGalleryItem"
+            android:id="@+id/DownloadButtonFavoriteItem"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
             android:layout_marginBottom="16dp"
             android:src="@drawable/download_button"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/FavoriteButtonGalleryItem"
-            app:layout_constraintStart_toStartOf="parent"
             android:background="@null"
-            android:contentDescription="Button"/>
+            android:contentDescription="Button"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="8dp"
+            app:layout_constraintEnd_toStartOf="@+id/FavoriteButtonFavoriteItem"
+            android:layout_marginEnd="8dp"/>
 
     <ImageButton
             android:scaleType="fitCenter"
-            android:id="@+id/FavoriteButtonGalleryItem"
+            android:id="@+id/FavoriteButtonFavoriteItem"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
             android:layout_marginBottom="16dp"
             android:background="@null"
-            android:src="@drawable/favorite_button"
+            android:src="@drawable/remove_favorite_button"
             android:contentDescription="Button2"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/DownloadButtonGalleryItem"/>
+            android:layout_marginStart="8dp"
+            app:layout_constraintStart_toEndOf="@+id/DownloadButtonFavoriteItem"
+            app:layout_constraintEnd_toStartOf="@+id/TrashButtonFavoriteItem"
+            android:layout_marginEnd="8dp"/>
+
+    <ImageButton
+            android:scaleType="fitCenter"
+            android:id="@+id/TrashButtonFavoriteItem"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="16dp"
+            android:background="@null"
+            android:src="@drawable/trash_button"
+            android:contentDescription="Button3"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginStart="8dp"
+            app:layout_constraintStart_toEndOf="@+id/FavoriteButtonFavoriteItem"
+            android:layout_marginEnd="8dp" app:layout_constraintEnd_toEndOf="parent"/>
 </android.support.constraint.ConstraintLayout>

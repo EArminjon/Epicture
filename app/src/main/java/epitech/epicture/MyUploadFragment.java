@@ -1,6 +1,8 @@
 package epitech.epicture;
 
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -62,7 +64,10 @@ public class MyUploadFragment extends Fragment {
                     gridView.setAdapter(adapter);
                     gridView.setOnItemClickListener((parent, view, position, id) -> {
                         GalleryItem item = items[position];
-                        /*displayInfo(item);*/
+                        Intent intent = new Intent((Activity) getContext(), MyUploadItemActivity.class);
+                        intent.putExtra("item", item);
+                        intent.putExtra("account", account);
+                        startActivity(intent);
                     });
 
                 } catch (JSONException e) {
