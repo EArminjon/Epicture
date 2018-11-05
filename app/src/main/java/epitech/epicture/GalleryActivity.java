@@ -97,9 +97,9 @@ public class GalleryActivity extends AppCompatActivity implements NavigationView
     private void updateNavigationAccount() {
         ImgurApi api = new ImgurApi();
 
-        api.getAccountSetting(this.getApplicationContext(), account, (String str) -> {
-            JSONObject json = null;
+        new Thread(() -> api.getAccountSetting(getApplicationContext(), account, (String str) -> {
             try {
+                JSONObject json = null;
                 json = new JSONObject(str);
 
                 TextView email = (TextView) findViewById(R.id.navigationAccountEmail);
@@ -110,16 +110,11 @@ public class GalleryActivity extends AppCompatActivity implements NavigationView
                 if (json.getJSONObject("data").get("avatar") != null) {
                     new ImageFromUrl((ImageView) findViewById(R.id.navigationAccountImage)).execute("https://imgur.com/user/" + account.getUsername() + "/avatar");
                 }
-
-
             } catch (JSONException e) {
                 e.printStackTrace();
             }
             return str;
-        });
-
-        /*TextView email = (TextView) findViewById(R.id.navigationAccountEmail);
-        TextView username = (TextView) findViewById(R.id.navigationAccountName);*/
+        })).start();
     }
 
 
