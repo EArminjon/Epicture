@@ -44,10 +44,12 @@ public class GalleryActivity extends AppCompatActivity implements NavigationView
         tabLayout.addTab(tabLayout.newTab().setText("Upload")); // 2
         tabLayout.addTab(tabLayout.newTab().setText("Favorite")); // 3
 
+
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
         final PagerAdapter adapter = new TabPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), account);
         viewPager.setAdapter(adapter);
         viewPager.setCurrentItem(1);
+        viewPager.setOffscreenPageLimit(4);
         tabLayout.setScrollPosition(1, 0f, true);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -113,7 +115,6 @@ public class GalleryActivity extends AppCompatActivity implements NavigationView
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            /*System.out.println("HERE: " + str);*/
             return str;
         });
 
@@ -178,5 +179,10 @@ public class GalleryActivity extends AppCompatActivity implements NavigationView
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

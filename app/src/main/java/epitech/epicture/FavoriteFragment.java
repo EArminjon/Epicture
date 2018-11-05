@@ -15,9 +15,10 @@ import org.json.JSONObject;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MyUploadFragment extends Fragment {
+public class FavoriteFragment extends Fragment {
 
-    public MyUploadFragment() {
+
+    public FavoriteFragment() {
         // Required empty public constructor
     }
 
@@ -28,10 +29,10 @@ public class MyUploadFragment extends Fragment {
         // Inflate the layout for this fragment
         Bundle bundle = getArguments();
         if (bundle == null)
-            return inflater.inflate(R.layout.my_upload_fragment, container, false);
+            return inflater.inflate(R.layout.favorite_fragment, container, false);
         Account account = (Account) bundle.getSerializable("account");
 
-        View myFragmentView = inflater.inflate(R.layout.my_upload_fragment, container, false);
+        View myFragmentView = inflater.inflate(R.layout.favorite_fragment, container, false);
         loadContent(myFragmentView, account);
         return myFragmentView;
     }
@@ -40,7 +41,7 @@ public class MyUploadFragment extends Fragment {
         ImgurApi api = new ImgurApi();
 
         if (account != null)
-            api.getAccountImages(this.getContext(), account, (String str) -> {
+            api.getAccountFavorite(this.getContext(), account, (String str) -> {
                 try {
                     JSONArray jsonarray = new JSONObject(str).getJSONArray("data");
                     GalleryItem[] items = new GalleryItem[jsonarray.length() > 14 ? 14 : jsonarray.length()];
@@ -57,7 +58,7 @@ public class MyUploadFragment extends Fragment {
                         items[i] = item;
                     }
 
-                    GridView gridView = (GridView) myFragmentView.findViewById(R.id.messageArea2);
+                    GridView gridView = (GridView) myFragmentView.findViewById(R.id.messageArea3);
                     final GalleryItemAdapter adapter = new GalleryItemAdapter(getActivity(), items);
                     gridView.setAdapter(adapter);
                     gridView.setOnItemClickListener((parent, view, position, id) -> {
@@ -71,15 +72,5 @@ public class MyUploadFragment extends Fragment {
                 return str;
             });
     }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-
-        if (isVisibleToUser) {
-            //
-        }
-    }
-
 
 }
