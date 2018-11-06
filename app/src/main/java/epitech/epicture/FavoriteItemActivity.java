@@ -2,6 +2,7 @@ package epitech.epicture;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -44,6 +45,7 @@ public class FavoriteItemActivity extends AppCompatActivity {
                     System.out.print("FAV:" + str + "\n");
                     return str;
                 })).start();
+            favoriteButton.setVisibility(View.INVISIBLE);
         });
 
         ImageButton downloadButton = (ImageButton) findViewById(R.id.DownloadButtonFavoriteItem);
@@ -60,6 +62,7 @@ public class FavoriteItemActivity extends AppCompatActivity {
                     finish();
                     return str;
                 })).start();
+            deleteButton.setVisibility(View.INVISIBLE);
         });
 
     }

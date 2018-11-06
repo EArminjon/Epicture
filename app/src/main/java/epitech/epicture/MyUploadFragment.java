@@ -50,6 +50,12 @@ public class MyUploadFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadContent(myFragmentView, account);
+    }
+
     private void loadContent(View myFragmentView, Account account) {
         ImgurApi api = new ImgurApi();
 

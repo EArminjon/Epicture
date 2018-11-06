@@ -53,6 +53,12 @@ public class GalleryListFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadGalleryContent(myFragmentView, account);
+    }
+
 
     private void loadGalleryContent(View myFragmentView, Account account) {
         ImgurApi api = new ImgurApi();

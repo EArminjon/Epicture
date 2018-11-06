@@ -42,6 +42,12 @@ public class FavoriteFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        loadContent(myFragmentView, account);
+    }
+
+    @Override
     public void setUserVisibleHint(boolean visible) {
         super.setUserVisibleHint(visible);
         if (visible) {

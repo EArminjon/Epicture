@@ -53,6 +53,7 @@ public class GalleryItemActivity extends AppCompatActivity {
                     System.out.print("FAV:" + str + "\n");
                     return str;
                 })).start();
+            favoriteButton.setVisibility(View.INVISIBLE);
         });
 
         ImageButton downloadButton = (ImageButton) findViewById(R.id.DownloadButtonGalleryItem);
