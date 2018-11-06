@@ -25,15 +25,14 @@ public class MainActivity extends AppCompatActivity {
     public void onLogout(View view) {
         Intent i = new Intent(this, AuthenticationActivity.class);
         i.putExtra("method", "logout");
-        startActivityForResult(i, AUTHENTICATION);
+        startActivity(i);
     }
 
-    // coming soon
-    /*public void onSkipAuthentication(View view) {
+    public void onSkipAuthentication(View view) {
         Intent i = new Intent(MainActivity.this, GalleryActivity.class);
         i.putExtra("account", account);
         startActivity(i);
-    }*/
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

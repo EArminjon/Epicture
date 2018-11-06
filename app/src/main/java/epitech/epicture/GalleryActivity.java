@@ -156,15 +156,11 @@ public class GalleryActivity extends AppCompatActivity implements NavigationView
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // TODO launch camera
-            startActivity(new Intent(GalleryActivity.this, PictureActivity.class));
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
+        if (id == R.id.nav_logout) {
+            Intent i = new Intent(this, AuthenticationActivity.class);
+            i.putExtra("method", "logout");
+            startActivity(i);
+            finish();
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
