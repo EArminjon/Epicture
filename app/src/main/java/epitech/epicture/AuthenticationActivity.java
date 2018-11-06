@@ -5,12 +5,11 @@ import android.app.DownloadManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.webkit.WebResourceRequest;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
+import android.util.Log;
+import android.webkit.*;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -74,45 +73,17 @@ public class AuthenticationActivity extends AppCompatActivity {
 
     private void logout() {
 
-        System.out.println("LOGOUT");
-        WebView imgurWebView = (WebView) findViewById(R.id.webview);
-        imgurWebView.setBackgroundColor(Color.TRANSPARENT);
-        imgurWebView.loadUrl("https://imgur.com/logout/logout");
-        imgurWebView.getSettings().setJavaScriptEnabled(true);
-        imgurWebView.getSettings().setSupportZoom(true);
-        imgurWebView.getSettings().setBuiltInZoomControls(true);
-        imgurWebView.getSettings().setPluginState(WebSettings.PluginState.ON);
-        imgurWebView.getSettings().setSupportMultipleWindows(true);
-        imgurWebView.getSettings().setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:61.0) Gecko/20100101 Firefox/61.0");
+        android.webkit.CookieManager cookieManager = CookieManager.getInstance();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            cookieManager.removeAllCookies(new ValueCallback<Boolean>() {
+                @Override
+                public void onReceiveValue(Boolean aBoolean) {
+                    Log.d("MDR", "Cookie removed: " + aBoolean);
+                }
+            });
+        } else cookieManager.removeAllCookie();
         finish();
-/*        // Instantiate the RequestQueue.
-        RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "https://imgur.com/logout/logout";
-
-        // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(com.android.volley.Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        //TODO GOOD
-                        maccessToken = null;
-                        mrefreshToken = null;
-                        musername = null;
-                        System.out.println("SUCCESS");
-                        finish();
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        //TODO ERROR
-                        System.out.println("FAIL");
-                        finish();
-                    }
-                });
-
-        // Add the request to the RequestQueue.
-        queue.add(stringRequest);*/
     }
 
     private void splitUrl(String url, WebView view) {

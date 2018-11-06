@@ -19,6 +19,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 
@@ -86,41 +88,37 @@ public class CameraFragment extends Fragment implements SurfaceHolder.Callback {
         return myFragmentView;
     }
 
+    public String createImageFromBitmap(Bitmap bitmap) {
+        String fileName = "myImage";
+        try {
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+            FileOutputStream fo = getContext().openFileOutput(fileName, Context.MODE_PRIVATE);
+            fo.write(bytes.toByteArray());
+            // remember close file output
+            fo.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            fileName = null;
+        }
+        return fileName;
+    }
+
+
     private Camera.PictureCallback mPictureCallback = new Camera.PictureCallback() {
         public void onPictureTaken(byte[] imageData, Camera c) {
             Bitmap bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
             System.out.print("PICTURE TAKEN\n");
-            checkPictureWithPopUp(bitmap);
-            /*upload(account, bitmap);*/
+
+            new Thread(() -> { // because this is slow
+                Intent intent = new Intent(getContext(), UploadPictureActivity.class);
+                intent.putExtra("account", account);
+                intent.putExtra("imageLocation", createImageFromBitmap(bitmap));
+                startActivity(intent);
+            }).start();
             camera.startPreview();
         }
     };
-
-    private void checkPictureWithPopUp(Bitmap image) {
-        AlertDialog.Builder pictureDialog = new AlertDialog.Builder(getContext());
-        String[] pictureDialogItems = {"ANNULER", "VALIDER"};
-
-        ImageView imageView = new ImageView(getActivity());
-        float scaleHt = 600.0f / image.getWidth();
-        Bitmap scaled = Bitmap.createScaledBitmap(image, 600, (int) (image.getWidth() * scaleHt), true);
-        imageView.setImageBitmap(scaled);
-
-        pictureDialog.setView(imageView);
-        pictureDialog.setItems(pictureDialogItems,
-                (dialog, which) -> {
-                    switch (which) {
-                        case 0:
-                            break;
-                        case 1:
-                            Intent intent = new Intent(getContext(), UploadPictureActivity.class);
-                            intent.putExtra("account", account);
-                            intent.putExtra("image", image); // trop large pour passer ... PUTAIN DE MERDE
-                            getContext().startActivity(intent);
-                            break;
-                    }
-                });
-        pictureDialog.show();
-    }
 
 
     @Override

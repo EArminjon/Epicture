@@ -28,11 +28,12 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(i, AUTHENTICATION);
     }
 
-    public void onSkipAuthentication(View view) {
+    // coming soon
+    /*public void onSkipAuthentication(View view) {
         Intent i = new Intent(MainActivity.this, GalleryActivity.class);
         i.putExtra("account", account);
         startActivity(i);
-    }
+    }*/
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
