@@ -32,4 +32,8 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="gallery_activty_camera">CAMERA</string>
+    <string name="gallery_activty_gallery">GALLERY</string>
+    <string name="gallery_activty_upload">UPLOAD</string>
+    <string name="gallery_activty_favorite">FAVORITE</string>
 </resources>

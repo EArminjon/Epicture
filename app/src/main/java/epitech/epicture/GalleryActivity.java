@@ -39,10 +39,10 @@ public class GalleryActivity extends AppCompatActivity implements NavigationView
     private void createPages() {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
 
-        tabLayout.addTab(tabLayout.newTab().setText("Camera")); //0
-        tabLayout.addTab(tabLayout.newTab().setText("Gallery")); //1
-        tabLayout.addTab(tabLayout.newTab().setText("Upload")); // 2
-        tabLayout.addTab(tabLayout.newTab().setText("Favorite")); // 3
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.gallery_activty_camera))); //0
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.gallery_activty_gallery))); //1
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.gallery_activty_upload))); // 2
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.gallery_activty_favorite))); // 3
 
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
@@ -126,28 +126,6 @@ public class GalleryActivity extends AppCompatActivity implements NavigationView
         } else {
             super.onBackPressed();
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.gallery, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

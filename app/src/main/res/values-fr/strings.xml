@@ -32,4 +32,8 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Enguezz boloss</string>
+    <string name="gallery_activty_camera">CAMERA</string>
+    <string name="gallery_activty_gallery">GALERIE</string>
+    <string name="gallery_activty_upload">ENVOYER</string>
+    <string name="gallery_activty_favorite">FAVORI</string>
 </resources>
