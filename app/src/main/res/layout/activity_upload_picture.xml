@@ -8,8 +8,8 @@
         tools:context=".UploadPictureActivity">
 
     <ImageView
+            android:scaleType="fitCenter"
             android:id="@+id/imageForUpload"
-            android:scaleType="centerCrop"
             android:contentDescription="@string/picture_not_available"
             android:layout_width="360dp"
             android:layout_height="360dp"

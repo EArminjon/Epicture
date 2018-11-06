@@ -52,7 +52,10 @@ public class UploadPictureActivity extends AppCompatActivity {
         ImgurApi api = new ImgurApi();
 
         if (account != null)
-            new Thread(() -> api.postImageToAccount(getApplicationContext(), account, imageBitmap)).start();
+            new Thread(() -> {
+                api.postImageToAccount(getApplicationContext(), account, imageBitmap);
+                finish();
+            }).start();
     }
 
     @Override

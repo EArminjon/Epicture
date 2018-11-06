@@ -1,43 +1,50 @@
 package epitech.epicture;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
+import android.Manifest;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.PixelFormat;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.InsetDrawable;
-import android.hardware.Camera;
+import android.graphics.SurfaceTexture;
+import android.hardware.camera2.*;
+import android.hardware.camera2.params.StreamConfigurationMap;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.util.Size;
 import android.view.*;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
+import java.util.Collections;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CameraFragment extends Fragment implements SurfaceHolder.Callback {
-
-    static final int REQUEST_IMAGE_CAPTURE = 1;
-
-    private Camera camera;
-    private int cameraMod;
-    private SurfaceView surfaceView;
-    private SurfaceHolder surfaceHolder;
-    private boolean previewing = false;
-    LayoutInflater controlInflater = null;
+public class CameraFragment extends Fragment {
     Account account;
+    private CameraDevice cameraDevice;
+    private CameraCaptureSession cameraCaptureSession;
+    private CameraManager cameraManager;
+    private int cameraFacing;
+    private TextureView.SurfaceTextureListener surfaceTextureListener;
+    private static final String CAMERA_FRONT = "1";
+    private static final String CAMERA_BACK = "0";
+    private String cameraId = CAMERA_BACK;
+    private Size previewSize;
+    private HandlerThread backgroundThread;
+    private Handler backgroundHandler;
+    private CameraDevice.StateCallback stateCallback;
+    private TextureView textureView;
+    private CaptureRequest.Builder captureRequestBuilder;
+    private CaptureRequest captureRequest;
+    private View myFragmentView;
+
+    private int CAMERA_REQUEST_CODE = 1;
 
     public CameraFragment() {
         // Required empty public constructor
@@ -52,43 +59,206 @@ public class CameraFragment extends Fragment implements SurfaceHolder.Callback {
         account = (Account) bundle.getSerializable("account");
 
 
-        View myFragmentView = inflater.inflate(R.layout.camera_fragment, container, false);
+        myFragmentView = inflater.inflate(R.layout.camera_fragment, container, false);
 
-        ((Activity) getContext()).getWindow().setFormat(PixelFormat.UNKNOWN);
-        surfaceView = (SurfaceView) myFragmentView.findViewById(R.id.surfaceView2);
-        surfaceHolder = surfaceView.getHolder();
-        surfaceHolder.addCallback(this);
-        surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+        textureView = myFragmentView.findViewById(R.id.texture_view);
 
-        /*controlInflater = LayoutInflater.from(getBaseContext());*/
-        /*View viewControl = controlInflater.inflate(R.layout.control, null);
-        LayoutParams layoutParamsControl
-                = new LayoutParams(LayoutParams.FILL_PARENT,
-                LayoutParams.FILL_PARENT);
-        this.addContentView(viewControl, layoutParamsControl);*/
 
-        ImageButton switchButton = (ImageButton) myFragmentView.findViewById(R.id.buttonTakePicture);
-        switchButton.setOnClickListener(v -> camera.takePicture(null, null, mPictureCallback));
+        FloatingActionButton takeButton = myFragmentView.findViewById(R.id.fab_take_photo);
+        takeButton.setOnClickListener(v -> {
+            Bitmap bitmap = textureView.getBitmap();
+            Intent intent = new Intent(getContext(), UploadPictureActivity.class);
+            intent.putExtra("account", account);
+            intent.putExtra("imageLocation", createImageFromBitmap(bitmap));
+            startActivity(intent);
+        });
 
-        ImageButton takeButton = (ImageButton) myFragmentView.findViewById(R.id.buttonSwitchCamera);
-        takeButton.setOnClickListener(v -> new Thread(() -> {
-            destroyCamera();
-            if (cameraMod == Camera.CameraInfo.CAMERA_FACING_FRONT)
-                openCamera(Camera.CameraInfo.CAMERA_FACING_BACK);
-            else
-                openCamera(Camera.CameraInfo.CAMERA_FACING_FRONT);
-            try {
-                camera.setPreviewDisplay(surfaceHolder);
-                setCameraDisplayOrientation((Activity) getContext(), cameraMod, camera);
-                camera.startPreview();
-            } catch (IOException e) {
-                e.printStackTrace();
+        FloatingActionButton switchButton = myFragmentView.findViewById(R.id.fab_switch_camera);
+        switchButton.setOnClickListener(v -> switchCamera());
+
+
+        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
+
+        cameraManager = (CameraManager) getActivity().getSystemService(Context.CAMERA_SERVICE);
+        cameraFacing = CameraCharacteristics.LENS_FACING_BACK;
+
+        surfaceTextureListener = new TextureView.SurfaceTextureListener() {
+            @Override
+            public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int width, int height) {
+                setUpCamera();
+                openCamera();
             }
-        }).start());
+
+            @Override
+            public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture, int width, int height) {
+            }
+
+            @Override
+            public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
+                return false;
+            }
+
+            @Override
+            public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {
+            }
+        };
+
+        stateCallback = new CameraDevice.StateCallback() {
+            @Override
+            public void onOpened(CameraDevice cameraDevice2) {
+                cameraDevice = cameraDevice2;
+                createPreviewSession();
+            }
+
+            @Override
+            public void onDisconnected(CameraDevice cameraDevice2) {
+                cameraDevice2.close();
+                cameraDevice = null;
+            }
+
+            @Override
+            public void onError(CameraDevice cameraDevice2, int error) {
+                cameraDevice2.close();
+                cameraDevice = null;
+            }
+        };
+
         return myFragmentView;
     }
 
-    public String createImageFromBitmap(Bitmap bitmap) {
+
+    private void createPreviewSession() {
+        try {
+            SurfaceTexture surfaceTexture = textureView.getSurfaceTexture();
+            surfaceTexture.setDefaultBufferSize(previewSize.getWidth(), previewSize.getHeight());
+            Surface previewSurface = new Surface(surfaceTexture);
+            captureRequestBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
+            captureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
+            captureRequestBuilder.set(CaptureRequest.CONTROL_AE_MODE, CaptureRequest.CONTROL_AE_MODE_ON);
+            captureRequestBuilder.set(CaptureRequest.CONTROL_AWB_MODE, CaptureRequest.CONTROL_AWB_MODE_AUTO);
+            captureRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, CameraMetadata.CONTROL_AF_TRIGGER_START);
+            captureRequestBuilder.set(CaptureRequest.CONTROL_AE_PRECAPTURE_TRIGGER, CameraMetadata.CONTROL_AE_PRECAPTURE_TRIGGER_START);
+            captureRequestBuilder.addTarget(previewSurface);
+
+            cameraDevice.createCaptureSession(Collections.singletonList(previewSurface),
+                    new CameraCaptureSession.StateCallback() {
+
+                        @Override
+                        public void onConfigured(CameraCaptureSession cameraCaptureSession2) {
+                            if (cameraDevice == null) {
+                                return;
+                            }
+
+                            try {
+                                captureRequest = captureRequestBuilder.build();
+                                cameraCaptureSession = cameraCaptureSession2;
+                                cameraCaptureSession.setRepeatingRequest(captureRequest, null, backgroundHandler);
+                            } catch (CameraAccessException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        @Override
+                        public void onConfigureFailed(CameraCaptureSession cameraCaptureSession2) {
+                        }
+                    }, backgroundHandler);
+        } catch (CameraAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        closeCamera();
+        closeBackgroundThread();
+    }
+
+    private void closeCamera() {
+        if (cameraCaptureSession != null) {
+            cameraCaptureSession.close();
+            cameraCaptureSession = null;
+        }
+
+        if (cameraDevice != null) {
+            cameraDevice.close();
+            cameraDevice = null;
+        }
+    }
+
+    private void closeBackgroundThread() {
+        if (backgroundHandler != null) {
+            backgroundThread.quitSafely();
+            backgroundThread = null;
+            backgroundHandler = null;
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        openBackgroundThread();
+        if (textureView.isAvailable()) {
+            setUpCamera();
+            openCamera();
+        } else {
+            textureView.setSurfaceTextureListener(surfaceTextureListener);
+        }
+    }
+
+    private void setUpCamera() {
+        try {
+            for (String cameraId : cameraManager.getCameraIdList()) {
+                CameraCharacteristics cameraCharacteristics = cameraManager.getCameraCharacteristics(cameraId);
+                if (cameraCharacteristics.get(CameraCharacteristics.LENS_FACING) == cameraFacing) {
+                    StreamConfigurationMap streamConfigurationMap = cameraCharacteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
+                    previewSize = streamConfigurationMap.getOutputSizes(SurfaceTexture.class)[0];
+                    this.cameraId = cameraId;
+                }
+            }
+        } catch (CameraAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void switchCamera() {
+        if (cameraId.equals(CAMERA_FRONT)) {
+            cameraId = CAMERA_BACK;
+            closeCamera();
+            reopenCamera();
+
+        } else if (cameraId.equals(CAMERA_BACK)) {
+            cameraId = CAMERA_FRONT;
+            closeCamera();
+            reopenCamera();
+        }
+    }
+
+    private void reopenCamera() {
+        if (textureView.isAvailable()) {
+            openCamera();
+        } else {
+            textureView.setSurfaceTextureListener(surfaceTextureListener);
+        }
+    }
+
+    private void openCamera() {
+        try {
+            if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                cameraManager.openCamera(cameraId, stateCallback, backgroundHandler);
+            }
+        } catch (CameraAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openBackgroundThread() {
+        backgroundThread = new HandlerThread("camera_background_thread");
+        backgroundThread.start();
+        backgroundHandler = new Handler(backgroundThread.getLooper());
+    }
+
+    private String createImageFromBitmap(Bitmap bitmap) {
         String fileName = "myImage";
         try {
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -102,98 +272,5 @@ public class CameraFragment extends Fragment implements SurfaceHolder.Callback {
             fileName = null;
         }
         return fileName;
-    }
-
-
-    private Camera.PictureCallback mPictureCallback = new Camera.PictureCallback() {
-        public void onPictureTaken(byte[] imageData, Camera c) {
-            Bitmap bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
-            System.out.print("PICTURE TAKEN\n");
-
-            new Thread(() -> { // because this is slow
-                Intent intent = new Intent(getContext(), UploadPictureActivity.class);
-                intent.putExtra("account", account);
-                intent.putExtra("imageLocation", createImageFromBitmap(bitmap));
-                startActivity(intent);
-            }).start();
-            camera.startPreview();
-        }
-    };
-
-
-    @Override
-    public void surfaceChanged(SurfaceHolder holder, int format, int width,
-                               int height) {
-        // TODO Auto-generated method stub
-        if (previewing) {
-            camera.stopPreview();
-            previewing = false;
-        }
-
-        if (camera != null) {
-            try {
-                camera.setPreviewDisplay(surfaceHolder);
-                setCameraDisplayOrientation((Activity) this.getContext(), cameraMod, camera);
-                camera.startPreview();
-                previewing = true;
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private static void setCameraDisplayOrientation(Activity activity, int cameraMod, android.hardware.Camera camera) {
-        android.hardware.Camera.CameraInfo info = new android.hardware.Camera.CameraInfo();
-        android.hardware.Camera.getCameraInfo(cameraMod, info);
-        int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
-        int degrees = 0;
-        switch (rotation) {
-            case Surface.ROTATION_0:
-                degrees = 0;
-                break;
-            case Surface.ROTATION_90:
-                degrees = 90;
-                break;
-            case Surface.ROTATION_180:
-                degrees = 180;
-                break;
-            case Surface.ROTATION_270:
-                degrees = 270;
-                break;
-        }
-
-        int result;
-        if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-            result = (info.orientation + degrees) % 360;
-            result = (360 - result) % 360;  // compensate the mirror
-        } else {  // back-facing
-            result = (info.orientation - degrees + 360) % 360;
-        }
-        camera.setDisplayOrientation(result);
-    }
-
-    private void openCamera(int mod) {
-        cameraMod = mod;
-        camera = Camera.open(mod);
-    }
-
-    @Override
-    public void surfaceCreated(SurfaceHolder holder) {
-        // TODO Auto-generated method stub
-        openCamera(Camera.CameraInfo.CAMERA_FACING_BACK);
-    }
-
-    private void destroyCamera() {
-        camera.stopPreview();
-        camera.release();
-        camera = null;
-        previewing = false;
-    }
-
-    @Override
-    public void surfaceDestroyed(SurfaceHolder holder) {
-        // TODO Auto-generated method stub
-        destroyCamera();
     }
 }
