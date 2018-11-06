@@ -22,6 +22,9 @@ import static android.provider.AlarmClock.EXTRA_MESSAGE;
  */
 public class GalleryListFragment extends Fragment {
 
+    Account account;
+    View myFragmentView;
+
     public GalleryListFragment() {
         // Required empty public constructor
     }
@@ -34,12 +37,22 @@ public class GalleryListFragment extends Fragment {
         Bundle bundle = getArguments();
         if (bundle == null)
             return inflater.inflate(R.layout.gallery_fragment, container, false);
-        Account account = (Account) bundle.getSerializable("account");
+        account = (Account) bundle.getSerializable("account");
 
-        View myFragmentView = inflater.inflate(R.layout.gallery_fragment, container, false);
+        myFragmentView = inflater.inflate(R.layout.gallery_fragment, container, false);
         loadGalleryContent(myFragmentView, account);
         return myFragmentView;
     }
+
+    @Override
+    public void setUserVisibleHint(boolean visible) {
+        super.setUserVisibleHint(visible);
+        if (visible) {
+            loadGalleryContent(myFragmentView, account);
+            onResume();
+        }
+    }
+
 
     private void loadGalleryContent(View myFragmentView, Account account) {
         ImgurApi api = new ImgurApi();

@@ -44,9 +44,10 @@ public class AuthenticationActivity extends AppCompatActivity {
         WebView imgurWebView = (WebView) findViewById(R.id.webview);
         imgurWebView.setBackgroundColor(Color.TRANSPARENT);
         imgurWebView.loadUrl(getString(R.string.api_imgur_login));
+        imgurWebView.getSettings().setBuiltInZoomControls(false);
+        imgurWebView.getSettings().setDisplayZoomControls(false);
         imgurWebView.getSettings().setJavaScriptEnabled(true);
         imgurWebView.getSettings().setSupportZoom(true);
-        imgurWebView.getSettings().setBuiltInZoomControls(true);
         imgurWebView.getSettings().setPluginState(WebSettings.PluginState.ON);
         imgurWebView.getSettings().setSupportMultipleWindows(true);
         imgurWebView.getSettings().setUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:61.0) Gecko/20100101 Firefox/61.0");

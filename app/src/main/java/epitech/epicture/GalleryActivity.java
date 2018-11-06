@@ -22,6 +22,7 @@ import org.json.JSONObject;
 
 public class GalleryActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private Account account;
+    private ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +46,7 @@ public class GalleryActivity extends AppCompatActivity implements NavigationView
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.gallery_activty_favorite))); // 3
 
 
-        final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+        viewPager = (ViewPager) findViewById(R.id.pager);
         final PagerAdapter adapter = new TabPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), account);
         viewPager.setAdapter(adapter);
         viewPager.setCurrentItem(1);
@@ -123,8 +124,10 @@ public class GalleryActivity extends AppCompatActivity implements NavigationView
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
+        } else if (viewPager.getCurrentItem() == 1) {
+            moveTaskToBack(true);
+        } else if (viewPager.getCurrentItem() != 1) {
+            viewPager.setCurrentItem(1);
         }
     }
 

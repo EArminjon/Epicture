@@ -19,6 +19,8 @@ import org.json.JSONObject;
  */
 public class FavoriteFragment extends Fragment {
 
+    Account account;
+    View myFragmentView;
 
     public FavoriteFragment() {
         // Required empty public constructor
@@ -32,11 +34,20 @@ public class FavoriteFragment extends Fragment {
         Bundle bundle = getArguments();
         if (bundle == null)
             return inflater.inflate(R.layout.favorite_fragment, container, false);
-        Account account = (Account) bundle.getSerializable("account");
+        account = (Account) bundle.getSerializable("account");
 
-        View myFragmentView = inflater.inflate(R.layout.favorite_fragment, container, false);
-        loadContent(myFragmentView, account);
+        myFragmentView = inflater.inflate(R.layout.favorite_fragment, container, false);
+        /*loadContent(myFragmentView, account);*/
         return myFragmentView;
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean visible) {
+        super.setUserVisibleHint(visible);
+        if (visible) {
+            loadContent(myFragmentView, account);
+            onResume();
+        }
     }
 
     private void loadContent(View myFragmentView, Account account) {
