@@ -98,7 +98,7 @@ public class GalleryActivity extends AppCompatActivity implements NavigationView
     private void updateNavigationAccount() {
         ImgurApi api = new ImgurApi();
 
-        new Thread(() -> api.getAccountSetting(getApplicationContext(), account, (String str) -> {
+        new Thread(() -> api.getAccountSetting(this, account, (String str) -> {
             try {
                 JSONObject json = null;
                 json = new JSONObject(str);

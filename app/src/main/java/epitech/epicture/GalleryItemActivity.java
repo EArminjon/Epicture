@@ -49,7 +49,7 @@ public class GalleryItemActivity extends AppCompatActivity {
             ImgurApi api = new ImgurApi();
 
             if (account != null)
-                new Thread(() -> api.postImageToFavorite(getApplicationContext(), account, item.getImages()[0], (String str) -> {
+                new Thread(() -> api.postImageToFavorite(this, account, item.getImages()[0], (String str) -> {
                     System.out.print("FAV:" + str + "\n");
                     return str;
                 })).start();

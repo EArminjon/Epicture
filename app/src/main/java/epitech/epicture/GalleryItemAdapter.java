@@ -18,7 +18,6 @@ public class GalleryItemAdapter extends BaseAdapter {
     GalleryItemAdapter(Context context, GalleryItem[] items) {
         _mContext = context;
         _items = items;
-        System.out.print("LENGTH:");
         System.out.print(_items.length);
     }
 

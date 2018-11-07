@@ -53,7 +53,7 @@ public class UploadPictureActivity extends AppCompatActivity {
 
         if (account != null)
             new Thread(() -> {
-                api.postImageToAccount(getApplicationContext(), account, imageBitmap);
+                api.postImageToAccount(this, account, imageBitmap);
                 finish();
             }).start();
     }

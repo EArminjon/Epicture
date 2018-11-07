@@ -3,6 +3,7 @@ package epitech.epicture;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Base64;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
@@ -54,7 +55,8 @@ class ImgurApi {
                 return header;
             }
         };
-        // Add the request to the RequestQueue.
+        if (method == Request.Method.POST) // because volley is shit and upload image twice time, or imgur is shit maybe
+            stringRequest.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 2, 1, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(stringRequest);
     }
 

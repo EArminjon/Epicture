@@ -41,7 +41,7 @@ public class FavoriteItemActivity extends AppCompatActivity {
         favoriteButton.setOnClickListener(v -> {
             ImgurApi api = new ImgurApi();
             if (account != null)
-                new Thread(() -> api.postImageToFavorite(getApplicationContext(), account, item.getImages()[0], (String str) -> {
+                new Thread(() -> api.postImageToFavorite(this, account, item.getImages()[0], (String str) -> {
                     System.out.print("FAV:" + str + "\n");
                     return str;
                 })).start();
@@ -57,7 +57,7 @@ public class FavoriteItemActivity extends AppCompatActivity {
         deleteButton.setOnClickListener(v -> {
             ImgurApi api = new ImgurApi();
             if (account != null)
-                new Thread(() -> api.delImageFromAccount(getApplicationContext(), account, item.getImages()[0], (String str) -> {
+                new Thread(() -> api.delImageFromAccount(this, account, item.getImages()[0], (String str) -> {
                     System.out.print("FAV:" + str + "\n");
                     finish();
                     return str;
