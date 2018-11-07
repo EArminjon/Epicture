@@ -60,11 +60,11 @@ class ImgurApi {
         queue.add(stringRequest);
     }
 
-    void getGallery(Context context, Account account, Interface obj) {
-        String section = "hot", sort = "time", window = "month", page = "0", viral = "false", mature = "false";
+    void getGallery(Context context, Account account, GridSetting settings, Interface obj) {
+        String section = "hot", sort = "time", window = "month", page = "0", mature = settings.isMatureString();
 
-        String url = MessageFormat.format("https://api.imgur.com/3/gallery/{0}/{1}/{2}/{3}?showViral={4}&mature={5}",
-                section, sort, window, page, viral, mature);
+        String url = MessageFormat.format("https://api.imgur.com/3/gallery/{0}/{1}/{2}/{3}?mature={5}",
+                section, sort, window, page, mature);
 
         Map<String, String> map = new HashMap<>();
 

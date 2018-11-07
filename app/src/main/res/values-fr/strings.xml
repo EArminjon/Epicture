@@ -37,4 +37,5 @@
     <string name="gallery_activty_upload">ENVOYER</string>
     <string name="gallery_activty_favorite">FAVORI</string>
     <string name="app_welcome">Bienvenue</string>
+    <string name="app_settings">Paramètres</string>
 </resources>

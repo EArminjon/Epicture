@@ -12,7 +12,9 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
 
-    <uses-feature android:name="android.hardware.camera" android:required="true"/>
+    <uses-feature
+            android:name="android.hardware.camera"
+            android:required="true"/>
     <uses-feature android:name="android.hardware.camera.autofocus"/>
     <uses-feature android:name="android.hardware.camera2.full"/>
 
@@ -61,6 +63,11 @@
                     android:value="epitech.epicture.GalleryItemActivity"/>
         </activity>
         <activity android:name=".UploadPictureActivity">
+        </activity>
+        <activity android:name=".SettingsActivity">
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value="epitech.epicture.GalleryItemActivity"/>
         </activity>
     </application>
 

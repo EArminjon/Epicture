@@ -62,14 +62,14 @@ public class GalleryListFragment extends Fragment {
 
     private void loadGalleryContent(View myFragmentView, Account account) {
         ImgurApi api = new ImgurApi();
+        GridSetting settings = ((GalleryActivity) getActivity()).settings;
 
         if (account != null)
-            new Thread(() -> api.getGallery(getContext(), account, (String str) -> {
+            new Thread(() -> api.getGallery(getContext(), account, settings, (String str) -> {
                 try {
                     JSONArray jsonarray = new JSONObject(str).getJSONArray("data");
-                    GalleryItem[] items = new GalleryItem[jsonarray.length() > 14 ? 14 : jsonarray.length()];
-                    //TODO: J'mets une limite car j'ai pas envie d'enculer mon forfait en affichant les images
-                    for (int i = 0; i < jsonarray.length() && i < 14; i++) {
+                    GalleryItem[] items = new GalleryItem[jsonarray.length() > settings.getItemsNb() ? settings.getItemsNb() : jsonarray.length()];
+                    for (int i = 0; i < jsonarray.length() && i < settings.getItemsNb(); i++) {
                         JSONObject jsonobject = jsonarray.getJSONObject(i);
                         String id = jsonobject.get("id").toString();
                         String title = jsonobject.get("title").toString();

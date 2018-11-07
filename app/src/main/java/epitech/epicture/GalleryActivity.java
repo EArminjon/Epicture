@@ -1,5 +1,6 @@
 package epitech.epicture;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,8 +22,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class GalleryActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+    private int SETTINGS_RESULT = 42;
     private Account account;
     private ViewPager viewPager;
+    static GridSetting settings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +33,7 @@ public class GalleryActivity extends AppCompatActivity implements NavigationView
         setContentView(R.layout.activity_gallery);
         Intent i = getIntent();
         account = (Account) i.getSerializableExtra("account");
+        settings = new GridSetting();
 
         createPages();
         createNavigationBar();
@@ -142,6 +146,10 @@ public class GalleryActivity extends AppCompatActivity implements NavigationView
             i.putExtra("method", "logout");
             startActivity(i);
             finish();
+        } else if (id == R.id.nav_settings) {
+            Intent i = new Intent(this, SettingsActivity.class);
+            i.putExtra("settings", settings);
+            startActivityForResult(i, SETTINGS_RESULT);
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
@@ -156,5 +164,11 @@ public class GalleryActivity extends AppCompatActivity implements NavigationView
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == SETTINGS_RESULT && resultCode == Activity.RESULT_OK) {
+            GridSetting newer = (GridSetting) data.getSerializableExtra("settings");
+            settings.setMature(newer.isMatureBool());
+            settings.setItemsNb(newer.getItemsNb());
+        }
     }
 }
