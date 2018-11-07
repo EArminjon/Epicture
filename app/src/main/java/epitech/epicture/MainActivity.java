@@ -22,11 +22,11 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(i, AUTHENTICATION);
     }
 
-    public void onLogout(View view) {
+    /*public void onLogout(View view) {
         Intent i = new Intent(this, AuthenticationActivity.class);
         i.putExtra("method", "logout");
         startActivity(i);
-    }
+    }*/
 
     public void onSkipAuthentication(View view) {
         Intent i = new Intent(MainActivity.this, GalleryActivity.class);

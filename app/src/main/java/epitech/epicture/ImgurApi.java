@@ -56,7 +56,7 @@ class ImgurApi {
             }
         };
         if (method == Request.Method.POST) // because volley is shit and upload image twice time, or imgur is shit maybe
-            stringRequest.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 2, 1, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            stringRequest.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 2, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(stringRequest);
     }
 
@@ -136,5 +136,9 @@ class ImgurApi {
         Map<String, String> map = new HashMap<>();
         map.put("Authorization", "Bearer " + account.getAccessToken());
         send(context, Request.Method.DELETE, url, map, null, obj);
+    }
+
+    void get(Context context, String url, Interface obj) {
+        send(context, Request.Method.GET, url, new HashMap<>(), null, obj);
     }
 }

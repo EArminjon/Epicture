@@ -36,4 +36,5 @@
     <string name="gallery_activty_gallery">GALLERY</string>
     <string name="gallery_activty_upload">UPLOAD</string>
     <string name="gallery_activty_favorite">FAVORITE</string>
+    <string name="app_welcome">Welcome</string>
 </resources>
