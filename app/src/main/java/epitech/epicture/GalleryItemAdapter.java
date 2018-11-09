@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.squareup.picasso.Picasso;
 
 
 public class GalleryItemAdapter extends BaseAdapter {
@@ -63,23 +62,17 @@ public class GalleryItemAdapter extends BaseAdapter {
         GalleryImageItem[] images = item.getImages();
         if (images != null) {
             String[] array = images[0].getType().split("/");
+            String url = item.getImages()[0].getLink();
+            ItemImageGenerator generator = new ItemImageGenerator();
             if (array[0].equals("image")) {
-                String url = images[0].getLink();
-                Picasso.get()
-                        .load(url)
-                        .resize(360, 240)
-                        .centerInside()
-                        .into(imageView);
-            } else
-                Picasso.get()
-                        .load("http://i.imgur.com/DvpvklR.png")
-                        .resize(360, 240)
-                        .centerInside()
-                        .into(imageView);
+                generator.pictureFromPictureUrl(url, imageView, 360, 240);
+            } else {
+                generator.pictureFromPictureUrl("https://www.rig.net/wp-content/uploads/vimeo-play-button-icon.png", imageView, 360, 240);
+            }
         }
+
         titleTextView.setText(item.getTitle());
         nameTextView.setText(item.getName());
         return convertView;
     }
-
 }

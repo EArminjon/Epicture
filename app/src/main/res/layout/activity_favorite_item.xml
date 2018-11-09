@@ -7,7 +7,7 @@
     tools:context=".GalleryItemActivity">
 
     <ImageView
-        android:id="@+id/favoriteItemView"
+        android:id="@+id/favoriteItemPictureView"
         android:layout_width="360dp"
         android:layout_height="360dp"
         android:layout_marginStart="16dp"
@@ -17,6 +17,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:contentDescription="Image" />
+
+    <VideoView
+            android:id="@+id/favoriteItemVideoView"
+            android:layout_width="360dp"
+            android:layout_height="360dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:contentDescription="Video" />
 
     <TextView
         android:id="@+id/favoriteItemTitle"

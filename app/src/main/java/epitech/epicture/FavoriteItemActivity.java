@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.squareup.picasso.Picasso;
+import android.widget.VideoView;
 
 public class FavoriteItemActivity extends AppCompatActivity {
     @Override
@@ -16,22 +16,21 @@ public class FavoriteItemActivity extends AppCompatActivity {
 
         GalleryItem item = (GalleryItem) getIntent().getSerializableExtra("item");
         Account account = (Account) getIntent().getSerializableExtra("account");
-        ImageView image = (ImageView) findViewById(R.id.favoriteItemView);
-
+        ImageView image = (ImageView) findViewById(R.id.favoriteItemPictureView);
+        VideoView videoView = (VideoView) findViewById(R.id.favoriteItemVideoView);
         String[] array = item.getImages()[0].getType().split("/");
+        String url = item.getImages()[0].getLink();
+        ItemImageGenerator generator = new ItemImageGenerator();
         if (array[0].equals("image")) {
-            String url = item.getImages()[0].getLink();
-            Picasso.get()
-                    .load(url)
-                    .resize(360, 240)
-                    .centerInside()
-                    .into(image);
-        } else
-            Picasso.get()
-                    .load("http://i.imgur.com/DvpvklR.png")
-                    .resize(360, 240)
-                    .centerInside()
-                    .into(image);
+            videoView.setVisibility(View.INVISIBLE);
+            image.setVisibility(View.VISIBLE);
+            generator.pictureFromPictureUrl(url, image, 360, 240);
+        } else {
+            image.setVisibility(View.INVISIBLE);
+            videoView.setVisibility(View.VISIBLE);
+            videoView.setVideoPath(url);
+            videoView.start();
+        }
 
         String title = item.getTitle();
         TextView textView = (TextView) findViewById(R.id.favoriteItemTitle);
