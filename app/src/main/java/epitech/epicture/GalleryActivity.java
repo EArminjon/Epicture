@@ -166,6 +166,8 @@ public class GalleryActivity extends AppCompatActivity implements NavigationView
             GridSetting newer = (GridSetting) data.getSerializableExtra("settings");
             settings.setMature(newer.isMatureBool());
             settings.setItemsNb(newer.getItemsNb());
+            settings.setSection(newer.getSection());
+            settings.setSort(newer.getSort());
         }
     }
 }

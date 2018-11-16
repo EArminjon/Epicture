@@ -61,11 +61,12 @@ class ImgurApi {
     }
 
     void getGallery(Context context, Account account, GridSetting settings, Interface obj) {
-        String section = "hot", sort = "time", window = "month", page = "0", mature = settings.isMatureString();
+        String section = settings.getSection(), sort = settings.getSort(), window = "month", page = "0", mature = settings.isMatureString();
 
-        String url = MessageFormat.format("https://api.imgur.com/3/gallery/{0}/{1}/{2}/{3}?mature={5}",
+        String url = MessageFormat.format("https://api.imgur.com/3/gallery/{0}/{1}/{2}/{3}?mature={4}",
                 section, sort, window, page, mature);
 
+        System.out.println(url);
         Map<String, String> map = new HashMap<>();
 
         map.put("Authorization", "Client-ID " + context.getString(R.string.api_client_id));

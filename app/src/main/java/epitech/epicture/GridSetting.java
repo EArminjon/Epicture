@@ -5,10 +5,30 @@ import java.io.Serializable;
 class GridSetting implements Serializable {
     private int _items;
     private boolean _mature;
+    private String _sort;
+    private String _section;
 
     GridSetting() {
         _items = 20;
         _mature = false;
+        _sort = "time";
+        _section = "hot";
+    }
+
+    String getSection() {
+        return _section;
+    }
+
+    void setSection(String section) {
+        _section = section;
+    }
+
+    String getSort() {
+        return _sort;
+    }
+
+    void setSort(String sort) {
+        _sort = sort;
     }
 
     int getItemsNb() {
