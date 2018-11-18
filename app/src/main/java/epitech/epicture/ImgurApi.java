@@ -19,11 +19,15 @@ import java.util.Map;
 
 class ImgurApi {
 
+    ImgurApi() {
+
+    }
+
     public interface Interface {
         String function(String str);
     }
 
-    private void send(Context context, int method, String url, Map<String, String> header, String body, Interface obj) {
+    void send(Context context, int method, String url, Map<String, String> header, String body, Interface obj) {
         // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(context);
 
@@ -66,7 +70,6 @@ class ImgurApi {
         String url = MessageFormat.format("https://api.imgur.com/3/gallery/{0}/{1}/{2}/{3}?mature={4}",
                 section, sort, window, page, mature);
 
-        System.out.println(url);
         Map<String, String> map = new HashMap<>();
 
         map.put("Authorization", "Client-ID " + context.getString(R.string.api_client_id));
@@ -137,9 +140,5 @@ class ImgurApi {
         Map<String, String> map = new HashMap<>();
         map.put("Authorization", "Bearer " + account.getAccessToken());
         send(context, Request.Method.DELETE, url, map, null, obj);
-    }
-
-    void get(Context context, String url, Interface obj) {
-        send(context, Request.Method.GET, url, new HashMap<>(), null, obj);
     }
 }
